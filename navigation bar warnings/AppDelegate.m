@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "AUTNavigationBar.h"
+#import "AUTCollectionViewController.h"
 
 @interface AppDelegate ()
 
@@ -16,7 +18,19 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    self.window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
+    
+
+    UINavigationController *viewController = [[UINavigationController alloc] initWithNavigationBarClass:AUTNavigationBar.class toolbarClass:nil];
+    
+    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+    AUTCollectionViewController *collectionViewController = [[AUTCollectionViewController alloc] initWithCollectionViewLayout:flowLayout];
+    
+    [viewController pushViewController:collectionViewController animated:NO];
+
+    self.window.rootViewController = viewController;
+    [self.window makeKeyAndVisible];
+    
     return YES;
 }
 

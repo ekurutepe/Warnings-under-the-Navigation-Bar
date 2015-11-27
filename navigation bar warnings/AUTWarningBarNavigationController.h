@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  AUTWarningBarNavigationController.h
 //  navigation bar warnings
 //
 //  Created by Engin Kurutepe on 27/11/15.
@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
-
+@interface AUTWarningBarNavigationController : UINavigationController
 
 @end
-

@@ -9,10 +9,13 @@
 /* Begin PBXBuildFile section */
 		872D64C21C08AB94001BEEBF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 872D64C11C08AB94001BEEBF /* main.m */; };
 		872D64C51C08AB94001BEEBF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 872D64C41C08AB94001BEEBF /* AppDelegate.m */; };
-		872D64C81C08AB94001BEEBF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 872D64C71C08AB94001BEEBF /* ViewController.m */; };
-		872D64CB1C08AB94001BEEBF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 872D64C91C08AB94001BEEBF /* Main.storyboard */; };
 		872D64CD1C08AB94001BEEBF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 872D64CC1C08AB94001BEEBF /* Assets.xcassets */; };
 		872D64D01C08AB94001BEEBF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 872D64CE1C08AB94001BEEBF /* LaunchScreen.storyboard */; };
+		872D64D91C08ABD3001BEEBF /* AUTCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 872D64D81C08ABD3001BEEBF /* AUTCollectionViewController.m */; };
+		872D64DC1C08AC05001BEEBF /* AUTWarningBarNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 872D64DB1C08AC05001BEEBF /* AUTWarningBarNavigationController.m */; };
+		872D64DF1C08B9A3001BEEBF /* AUTNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 872D64DE1C08B9A3001BEEBF /* AUTNavigationBar.m */; };
+		872D64E21C08C256001BEEBF /* AUTColorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 872D64E11C08C256001BEEBF /* AUTColorViewController.m */; };
+		872D64E51C08C646001BEEBF /* UINavigationItem+AUTWarningBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 872D64E41C08C646001BEEBF /* UINavigationItem+AUTWarningBar.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,12 +23,19 @@
 		872D64C11C08AB94001BEEBF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		872D64C31C08AB94001BEEBF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		872D64C41C08AB94001BEEBF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		872D64C61C08AB94001BEEBF /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		872D64C71C08AB94001BEEBF /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		872D64CA1C08AB94001BEEBF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		872D64CC1C08AB94001BEEBF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		872D64CF1C08AB94001BEEBF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		872D64D11C08AB94001BEEBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		872D64D71C08ABD3001BEEBF /* AUTCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUTCollectionViewController.h; sourceTree = "<group>"; };
+		872D64D81C08ABD3001BEEBF /* AUTCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AUTCollectionViewController.m; sourceTree = "<group>"; };
+		872D64DA1C08AC05001BEEBF /* AUTWarningBarNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUTWarningBarNavigationController.h; sourceTree = "<group>"; };
+		872D64DB1C08AC05001BEEBF /* AUTWarningBarNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AUTWarningBarNavigationController.m; sourceTree = "<group>"; };
+		872D64DD1C08B9A3001BEEBF /* AUTNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUTNavigationBar.h; sourceTree = "<group>"; };
+		872D64DE1C08B9A3001BEEBF /* AUTNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AUTNavigationBar.m; sourceTree = "<group>"; };
+		872D64E01C08C256001BEEBF /* AUTColorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUTColorViewController.h; sourceTree = "<group>"; };
+		872D64E11C08C256001BEEBF /* AUTColorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AUTColorViewController.m; sourceTree = "<group>"; };
+		872D64E31C08C646001BEEBF /* UINavigationItem+AUTWarningBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationItem+AUTWarningBar.h"; sourceTree = "<group>"; };
+		872D64E41C08C646001BEEBF /* UINavigationItem+AUTWarningBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationItem+AUTWarningBar.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,13 +70,20 @@
 			children = (
 				872D64C31C08AB94001BEEBF /* AppDelegate.h */,
 				872D64C41C08AB94001BEEBF /* AppDelegate.m */,
-				872D64C61C08AB94001BEEBF /* ViewController.h */,
-				872D64C71C08AB94001BEEBF /* ViewController.m */,
-				872D64C91C08AB94001BEEBF /* Main.storyboard */,
 				872D64CC1C08AB94001BEEBF /* Assets.xcassets */,
 				872D64CE1C08AB94001BEEBF /* LaunchScreen.storyboard */,
 				872D64D11C08AB94001BEEBF /* Info.plist */,
 				872D64C01C08AB94001BEEBF /* Supporting Files */,
+				872D64D71C08ABD3001BEEBF /* AUTCollectionViewController.h */,
+				872D64D81C08ABD3001BEEBF /* AUTCollectionViewController.m */,
+				872D64DA1C08AC05001BEEBF /* AUTWarningBarNavigationController.h */,
+				872D64DB1C08AC05001BEEBF /* AUTWarningBarNavigationController.m */,
+				872D64DD1C08B9A3001BEEBF /* AUTNavigationBar.h */,
+				872D64DE1C08B9A3001BEEBF /* AUTNavigationBar.m */,
+				872D64E01C08C256001BEEBF /* AUTColorViewController.h */,
+				872D64E11C08C256001BEEBF /* AUTColorViewController.m */,
+				872D64E31C08C646001BEEBF /* UINavigationItem+AUTWarningBar.h */,
+				872D64E41C08C646001BEEBF /* UINavigationItem+AUTWarningBar.m */,
 			);
 			path = "navigation bar warnings";
 			sourceTree = "<group>";
@@ -138,7 +155,6 @@
 			files = (
 				872D64D01C08AB94001BEEBF /* LaunchScreen.storyboard in Resources */,
 				872D64CD1C08AB94001BEEBF /* Assets.xcassets in Resources */,
-				872D64CB1C08AB94001BEEBF /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,23 +165,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				872D64C81C08AB94001BEEBF /* ViewController.m in Sources */,
+				872D64E51C08C646001BEEBF /* UINavigationItem+AUTWarningBar.m in Sources */,
 				872D64C51C08AB94001BEEBF /* AppDelegate.m in Sources */,
 				872D64C21C08AB94001BEEBF /* main.m in Sources */,
+				872D64D91C08ABD3001BEEBF /* AUTCollectionViewController.m in Sources */,
+				872D64DC1C08AC05001BEEBF /* AUTWarningBarNavigationController.m in Sources */,
+				872D64DF1C08B9A3001BEEBF /* AUTNavigationBar.m in Sources */,
+				872D64E21C08C256001BEEBF /* AUTColorViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		872D64C91C08AB94001BEEBF /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				872D64CA1C08AB94001BEEBF /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		872D64CE1C08AB94001BEEBF /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
