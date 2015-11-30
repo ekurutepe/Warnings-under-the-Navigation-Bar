@@ -12,8 +12,6 @@
 
 @interface AUTCollectionViewController ()
 
-@property (nonatomic, copy) NSString *warningText;
-
 @end
 
 @implementation AUTCollectionViewController
@@ -29,7 +27,7 @@ static NSString * const reuseIdentifier = @"Cell";
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
     
     self.navigationItem.title = @"Collection";
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Warning" style:UIBarButtonItemStylePlain target:self action:@selector(didTapWarning:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(didTapWarning:)];
 //    self.navigationItem.prompt = @"test";
     // Do any additional setup after loading the view.
 }
@@ -50,14 +48,8 @@ static NSString * const reuseIdentifier = @"Cell";
 */
 
 - (void)didTapWarning:(UIBarButtonItem *)item {
-    if (self.warningText == nil) {
-        self.warningText = @"Important Warning";
-    }
-    else {
-        self.warningText = nil;
-    }
     
-    self.navigationController.warnings = self.warningText ? @[self.warningText] : nil;
+    self.navigationController.warnings = [@[@"important warning"] arrayByAddingObjectsFromArray:self.navigationController.warnings];
     
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     [self.navigationController setNavigationBarHidden:NO animated:NO];
