@@ -28,6 +28,8 @@ NSString *CellIdentifier = @"WarningCell";
         _warningsTableView.hidden = YES;
         _warningsTableView.dataSource = self;
         _warningsTableView.delegate = self;
+        _warningsTableView.scrollsToTop = NO;
+        _warningsTableView.scrollEnabled = NO;
         [_warningsTableView registerClass:UITableViewCell.class forCellReuseIdentifier:CellIdentifier];
         [self addSubview:_warningsTableView];
     }
