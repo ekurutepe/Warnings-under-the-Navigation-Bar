@@ -8,8 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UINavigationItem (AUTWarningBar)
+#import "AUTNavigationBar.h"
+
+
+
+@interface UINavigationController (AUTWarningBar) <AUTNavigationBarWarningsDataSource>
 
 @property (nonatomic, copy) NSArray *warnings;
+
++ (CGFloat)defaultWarningHeight;
+
++ (void)setDefaultWarningHeight:(CGFloat)height;
 
 @end

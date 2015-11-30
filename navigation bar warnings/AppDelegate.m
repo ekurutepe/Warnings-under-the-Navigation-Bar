@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "AUTNavigationBar.h"
 #import "AUTCollectionViewController.h"
+#import "UINavigationController+AUTWarningBar.h"
 
 @interface AppDelegate ()
 
@@ -16,11 +17,9 @@
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
     
-
     UINavigationController *viewController = [[UINavigationController alloc] initWithNavigationBarClass:AUTNavigationBar.class toolbarClass:nil];
     
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];

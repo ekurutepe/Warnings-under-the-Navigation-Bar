@@ -8,60 +8,97 @@
 
 #import "AUTNavigationBar.h"
 
-#import "UINavigationItem+AUTWarningBar.h"
+#import "UINavigationController+AUTWarningBar.h"
 
-const CGFloat DefaultWarningHeight = 30;
+NSString *CellIdentifier = @"WarningCell";
 
-@interface AUTNavigationBar ()
+NS_ASSUME_NONNULL_BEGIN
 
-@property (nonatomic, assign) CGFloat currentWarningHeight;
+@interface AUTNavigationBar () <UITableViewDataSource, UITableViewDelegate>
+
+@property (null_resettable, nonatomic, strong) UITableView *warningsTableView;
 
 @end
 
 @implementation AUTNavigationBar
 
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
-//
-- (CGSize)sizeThatFits:(CGSize)size {
-    CGSize tallerSize = [super sizeThatFits:size];
+- (UITableView *)warningsTableView {
+    if (_warningsTableView == nil) {
+        _warningsTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+        _warningsTableView.hidden = YES;
+        _warningsTableView.dataSource = self;
+        _warningsTableView.delegate = self;
+        [_warningsTableView registerClass:UITableViewCell.class forCellReuseIdentifier:CellIdentifier];
+        [self addSubview:_warningsTableView];
+    }
     
-    if (self.topItem.warnings != nil) {
-        tallerSize.height += DefaultWarningHeight;
-        self.currentWarningHeight = DefaultWarningHeight;
+    return _warningsTableView;
+}
+
+- (CGSize)sizeThatFits:(CGSize)size {
+    CGSize originalSize = [super sizeThatFits:size];
+
+    CGFloat warningHeight = 0;
+    
+    if (self.dataSource != nil) {
+        NSInteger warningCount = [self.dataSource numberOfWarningsForNavigationBar:self];
+        
+        for (int idx = 0; idx < warningCount; idx++) {
+            warningHeight += [self.dataSource heightForWarningAtIndex:idx];
+        }
+    }
+    
+    originalSize.height += warningHeight;
+    
+    [self setTransform:CGAffineTransformMakeTranslation(0, -(warningHeight))];
+    
+    if (warningHeight > 0) {
+        self.warningsTableView.hidden = NO;
+        self.warningsTableView.frame = CGRectMake(0, originalSize.height, originalSize.width, warningHeight);
+        self.warningsTableView.transform = CGAffineTransformInvert(self.transform);
+        [self.warningsTableView reloadData];
     }
     else {
-        self.currentWarningHeight = 0;
+        self.warningsTableView.hidden = YES;
     }
-    
-    NSLog(@"%@: %@", NSStringFromSelector(_cmd), NSStringFromCGSize(tallerSize));
-    return tallerSize;
+
+    return originalSize;
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    [self setTransform:CGAffineTransformMakeTranslation(0, -(self.currentWarningHeight))];
-    
     for (UIView *view in self.subviews) {
-        NSLog(@"%@: %@", NSStringFromClass(view.class), NSStringFromCGRect(view.frame));
         if ([view isKindOfClass:NSClassFromString(@"_UINavigationBarBackground")]) {
-            
-            CGRect bounds = [self bounds];
-            CGRect frame = [view frame];
-            frame.origin.y = bounds.origin.y + self.currentWarningHeight - 20.f;
-            frame.size.height = bounds.size.height + 20.f;
-            
-            [view setFrame:frame];
-            
+            view.transform = CGAffineTransformInvert(self.transform);
         }
     }
 }
 
+#pragma mark - UITableViewDataSource 
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [self.dataSource numberOfWarningsForNavigationBar:self];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    [self.dataSource configureWarningCell:cell atIndex:indexPath.item];
+    
+    return cell;
+}
+
+#pragma mark - UITableViewDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return [self.dataSource heightForWarningAtIndex:indexPath.item];
+}
+
 @end
+
+NS_ASSUME_NONNULL_END

@@ -8,7 +8,7 @@
 
 #import "AUTCollectionViewController.h"
 #import "AUTColorViewController.h"
-#import "UINavigationItem+AUTWarningBar.h"
+#import "UINavigationController+AUTWarningBar.h"
 
 @interface AUTCollectionViewController ()
 
@@ -57,14 +57,15 @@ static NSString * const reuseIdentifier = @"Cell";
         self.warningText = nil;
     }
     
-    self.navigationItem.warnings = self.warningText ? @[self.warningText] : nil;
+    self.navigationController.warnings = self.warningText ? @[self.warningText] : nil;
     
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     [self.navigationController setNavigationBarHidden:NO animated:NO];
 }
 
 - (UIColor *)colorForIndexPath:(NSIndexPath *)indexPath {
-    return [UIColor colorWithRed:cos(1.2*indexPath.item) green:sin(2.0*indexPath.item) blue:cos(1.5*indexPath.item+0.5) alpha:1.0];
+    CGFloat shade = (1.0+(indexPath.item%5))/8.0;
+    return [UIColor colorWithWhite:shade alpha:1.0];
 }
 
 #pragma mark <UICollectionViewDataSource>
@@ -75,7 +76,7 @@ static NSString * const reuseIdentifier = @"Cell";
 
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return 50;
+    return 150;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
