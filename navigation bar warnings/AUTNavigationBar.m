@@ -10,9 +10,9 @@
 
 #import "UINavigationController+AUTWarningBar.h"
 
-NSString *CellIdentifier = @"WarningCell";
-
 NS_ASSUME_NONNULL_BEGIN
+
+NSString *CellIdentifier = @"WarningCell";
 
 @interface AUTNavigationBar () <UITableViewDataSource, UITableViewDelegate>
 

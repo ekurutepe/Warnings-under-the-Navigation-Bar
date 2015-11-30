@@ -11,6 +11,8 @@
 #import "UINavigationController+AUTWarningBar.h"
 #import "AUTNavigationBar.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation UINavigationController (AUTWarningBar)
 
 @dynamic warnings;
@@ -73,3 +75,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
