@@ -56,9 +56,11 @@ NSString *CellIdentifier = @"WarningCell";
     
     if (warningHeight > 0) {
         self.warningsTableView.hidden = NO;
-        self.warningsTableView.frame = CGRectMake(0, originalSize.height, originalSize.width, warningHeight);
         self.warningsTableView.transform = CGAffineTransformInvert(self.transform);
-        [self.warningsTableView reloadData];
+        [UIView animateWithDuration:0.2 animations:^{
+            self.warningsTableView.frame = CGRectMake(0, originalSize.height, originalSize.width, warningHeight);
+            [self.warningsTableView reloadData];
+        }];
     }
     else {
         self.warningsTableView.hidden = YES;

@@ -26,12 +26,26 @@ static NSString * const reuseIdentifier = @"Cell";
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
     
     self.navigationItem.title = @"Collection";
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(didTapWarning:)];
+    self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(didTapAddWarning:)],[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(didTapRemoveWarning:)]];
+    
+
 }
 
-- (void)didTapWarning:(UIBarButtonItem *)item {
-    
+- (void)didTapAddWarning:(UIBarButtonItem *)item {
     self.navigationController.warnings = [@[@"important warning"] arrayByAddingObjectsFromArray:self.navigationController.warnings];
+    
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    [self.navigationController setNavigationBarHidden:NO animated:NO];
+}
+
+
+- (void)didTapRemoveWarning:(UIBarButtonItem *)item {
+    NSArray *warnings = self.navigationController.warnings;
+    
+    if (warnings.count == 0) return;
+    
+    NSRange subRange = NSMakeRange(0, warnings.count-1);
+    self.navigationController.warnings = [warnings subarrayWithRange:subRange];
     
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     [self.navigationController setNavigationBarHidden:NO animated:NO];
