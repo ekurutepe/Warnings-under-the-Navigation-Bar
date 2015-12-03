@@ -55,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
-#pragma mark - AUTNavigationBarDelegate
+#pragma mark - AUTNavigationBarWarningsDataSource
 
 - (NSInteger)numberOfWarningsForNavigationBar:(AUTNavigationBar *)navigationBar {
     return self.warnings.count;
