@@ -67,16 +67,6 @@ NSString *CellIdentifier = @"WarningCell";
     return originalSize;
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-    for (UIView *view in self.subviews) {
-        if ([view isKindOfClass:NSClassFromString(@"_UINavigationBarBackground")]) {
-            view.transform = CGAffineTransformInvert(self.transform);
-        }
-    }
-}
-
 #pragma mark - UITableViewDataSource 
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
