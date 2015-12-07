@@ -41,17 +41,45 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray *)warnings {
     NSArray *warnings = objc_getAssociatedObject(self, _cmd);
     
+    if (warnings == nil) {
+        return @[];
+    }
+    
     return warnings;
 }
 
 - (void)setWarnings:(NSArray *)warnings {
-    NSArray *currentWarnings = [self warnings];
+    NSArray *previousWarnings = [self warnings];
     
-    if (![currentWarnings isEqualToArray:warnings]) {
+    if (![previousWarnings isEqualToArray:warnings]) {
         objc_setAssociatedObject(self, @selector(warnings), warnings, OBJC_ASSOCIATION_COPY_NONATOMIC);
         AUTNavigationBar *navBar = (AUTNavigationBar *)self.navigationBar;
         
         navBar.dataSource = self;
+        
+        [self setNavigationBarHidden:YES animated:NO];
+        [self setNavigationBarHidden:NO animated:NO];
+        
+        
+        NSMutableArray *addedWarnings = [NSMutableArray arrayWithArray:warnings];
+        [addedWarnings removeObjectsInArray:previousWarnings];
+        
+        NSIndexSet *addedIndexes = [warnings indexesOfObjectsPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            return [addedWarnings containsObject:obj];
+        }];
+        
+        NSMutableArray *removedWarnings = [NSMutableArray arrayWithArray:previousWarnings];
+        [removedWarnings removeObjectsInArray:warnings];
+        
+        NSIndexSet *removedIndexes = [previousWarnings indexesOfObjectsPassingTest:^(id obj, NSUInteger idx, BOOL *stop) {
+            return [removedWarnings containsObject:obj];
+        }];
+
+        if (addedIndexes == nil && removedIndexes == nil) return;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [navBar updateWarningsByAddingAtIndexes:addedIndexes deletingAtIndexes:removedIndexes animated:YES];
+        });
     }
 }
 

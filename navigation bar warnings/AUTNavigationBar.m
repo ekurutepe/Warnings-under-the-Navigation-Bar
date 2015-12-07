@@ -18,6 +18,8 @@ NSString *CellIdentifier = @"WarningCell";
 
 @property (null_resettable, nonatomic, strong) UITableView *warningsTableView;
 
+@property (nonatomic, assign) CGFloat lastWarningHeight;
+
 @end
 
 @implementation AUTNavigationBar
@@ -57,16 +59,63 @@ NSString *CellIdentifier = @"WarningCell";
     if (warningHeight > 0) {
         self.warningsTableView.hidden = NO;
         self.warningsTableView.transform = CGAffineTransformInvert(self.transform);
-        [UIView animateWithDuration:0.2 animations:^{
-            self.warningsTableView.frame = CGRectMake(0, originalSize.height, originalSize.width, warningHeight);
-            [self.warningsTableView reloadData];
-        }];
+        if (self.warningsTableView.frame.size.width == 0) {
+            self.warningsTableView.frame = CGRectMake(0, originalSize.height, originalSize.width, 0);
+        }
+
+        NSLog(@"%@ content size: %@", NSStringFromSelector(_cmd), NSStringFromCGSize(self.warningsTableView.contentSize));
     }
     else {
         self.warningsTableView.hidden = YES;
     }
 
     return originalSize;
+}
+
+- (NSArray *)indexPathsFromIndexSet:(NSIndexSet *)indexSet {
+    NSMutableArray *indexPaths = [NSMutableArray array];
+    [indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:idx inSection:0];
+        [indexPaths addObject:indexPath];
+    }];
+    return [indexPaths copy];
+}
+
+- (void)updateWarningsByAddingAtIndexes:(NSIndexSet *)addedIndexes deletingAtIndexes:(NSIndexSet *)deletedIndexes animated:(BOOL)animated {
+    
+    NSArray *addedIndexPaths = [self indexPathsFromIndexSet:addedIndexes];
+    NSArray *deletedIndexPaths = [self indexPathsFromIndexSet:deletedIndexes];
+    
+    CGFloat addedHeight = 0;
+    
+    for (NSIndexPath *indexPath in addedIndexPaths) {
+        addedHeight += [self.dataSource heightForWarningAtIndex:indexPath.item];
+    }
+    
+    CGFloat deletedHeight = 0;
+    
+    for (NSIndexPath *indexPath in deletedIndexPaths) {
+        deletedHeight += [self.dataSource heightForWarningAtIndex:indexPath.item];
+    }
+    
+    CGRect frame = self.warningsTableView.frame;
+    
+    frame.size = CGSizeMake(CGRectGetWidth(self.frame), CGRectGetHeight(frame)+addedHeight-deletedHeight);
+    
+    [UIView beginAnimations:@"warning table updates" context:nil];
+    self.warningsTableView.frame = frame;
+    [self.warningsTableView beginUpdates];
+    [self.warningsTableView deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+    [self.warningsTableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+    
+    [self.warningsTableView deleteRowsAtIndexPaths:deletedIndexPaths withRowAnimation:UITableViewRowAnimationLeft];
+    [self.warningsTableView insertRowsAtIndexPaths:addedIndexPaths withRowAnimation:UITableViewRowAnimationLeft];
+    
+    self.lastWarningHeight = CGRectGetHeight(frame);
+    
+    [self.warningsTableView endUpdates];
+    [UIView commitAnimations];
+    
 }
 
 #pragma mark - UITableViewDataSource 

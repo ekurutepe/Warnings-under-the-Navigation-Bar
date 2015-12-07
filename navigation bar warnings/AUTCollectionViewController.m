@@ -28,14 +28,11 @@ static NSString * const reuseIdentifier = @"Cell";
     self.navigationItem.title = @"Collection";
     self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(didTapAddWarning:)],[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(didTapRemoveWarning:)]];
     
-
 }
 
 - (void)didTapAddWarning:(UIBarButtonItem *)item {
-    self.navigationController.warnings = [@[@"important warning"] arrayByAddingObjectsFromArray:self.navigationController.warnings];
-    
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
-    [self.navigationController setNavigationBarHidden:NO animated:NO];
+    NSString *warningString = [[NSUUID UUID] UUIDString];
+    self.navigationController.warnings = [self.navigationController.warnings arrayByAddingObject:warningString];
 }
 
 
@@ -47,8 +44,7 @@ static NSString * const reuseIdentifier = @"Cell";
     NSRange subRange = NSMakeRange(0, warnings.count-1);
     self.navigationController.warnings = [warnings subarrayWithRange:subRange];
     
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
-    [self.navigationController setNavigationBarHidden:NO animated:NO];
+
 }
 
 - (UIColor *)colorForIndexPath:(NSIndexPath *)indexPath {
