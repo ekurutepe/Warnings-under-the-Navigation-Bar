@@ -17,6 +17,27 @@ NS_ASSUME_NONNULL_BEGIN
 
 @dynamic warnings;
 
+- (NSUInteger)warningsCount {
+    NSNumber *count = objc_getAssociatedObject(self, _cmd);
+    
+    if (count == nil) {
+        count = @0;
+        objc_setAssociatedObject(self, _cmd, count, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    }
+    
+    return count.integerValue;
+}
+
+- (void)setWarningsCount:(NSUInteger)count {
+    NSUInteger currentCount = [self warningsCount];
+    
+    if (currentCount != count) {
+        objc_setAssociatedObject(self, @selector(warningsCount), @(count), OBJC_ASSOCIATION_COPY_NONATOMIC);
+    }
+    
+    return;
+}
+
 + (CGFloat)defaultWarningHeight {
     NSNumber *height = objc_getAssociatedObject(self, _cmd);
     
@@ -32,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
     CGFloat currentHeight = [self defaultWarningHeight];
     
     if (currentHeight != height) {
-        objc_setAssociatedObject(self, _cmd, @(height), OBJC_ASSOCIATION_COPY_NONATOMIC);
+        objc_setAssociatedObject(self, @selector(defaultWarningHeight), @(height), OBJC_ASSOCIATION_COPY_NONATOMIC);
     }
     
     return;
@@ -56,10 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
         AUTNavigationBar *navBar = (AUTNavigationBar *)self.navigationBar;
         
         navBar.dataSource = self;
-        
-        [self setNavigationBarHidden:YES animated:NO];
-        [self setNavigationBarHidden:NO animated:NO];
-        
+        [self setWarningHeight:[self heightForWarningsTablePreUpdate] forNavigationBar:navBar];
         
         NSMutableArray *addedWarnings = [NSMutableArray arrayWithArray:warnings];
         [addedWarnings removeObjectsInArray:previousWarnings];
@@ -78,22 +96,63 @@ NS_ASSUME_NONNULL_BEGIN
         if (addedIndexes == nil && removedIndexes == nil) return;
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [navBar updateWarningsByAddingAtIndexes:addedIndexes deletingAtIndexes:removedIndexes animated:YES];
+            [self setWarningsCount:warnings.count];
+            CGFloat curtainOffset = ((NSInteger)addedIndexes.count - (NSInteger)removedIndexes.count)*30.0;
+            CGFloat navBarHeight = [self heightForWarningsTablePreUpdate];
+            CGRect curtainFrame = CGRectMake(0, navBarHeight, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - navBarHeight);
+            UIView *curtain = [self.topViewController.view resizableSnapshotViewFromRect:curtainFrame afterScreenUpdates:NO withCapInsets:UIEdgeInsetsZero];
+
+            curtain.frame = curtainFrame;
+            [self.view insertSubview:curtain atIndex:1];
+            [UIView animateWithDuration:0.2 animations:^{
+                [navBar updateWarningsByAddingAtIndexes:addedIndexes deletingAtIndexes:removedIndexes];
+                curtain.frame = CGRectOffset(curtain.frame, 0, curtainOffset);
+            } completion:^(BOOL finished) {
+                [self setWarningHeight:[self heightForWarningsTablePostUpdate] forNavigationBar:navBar];
+                [UIView animateWithDuration:0.2 animations:^{
+                    curtain.alpha = 0.0;
+                } completion:^(BOOL finished) {
+                    [curtain removeFromSuperview];
+                }];
+            }];
+            
+            
         });
     }
 }
 
+- (void)setWarningHeight:(CGFloat)height forNavigationBar:(AUTNavigationBar *)navbar {
+    NSLog(@"%@ %f", NSStringFromSelector(_cmd), height);
+    [navbar setWarningHeight:height];
+    [self setNavigationBarHidden:YES animated:NO];
+    [self setNavigationBarHidden:NO animated:NO];
+}
+
 #pragma mark - AUTNavigationBarWarningsDataSource
 
+- (CGFloat)heightForWarningsTablePreUpdate {
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+    return [self warningsCount] * [self.class defaultWarningHeight];
+}
+
+- (CGFloat)heightForWarningsTablePostUpdate {
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+    return self.warnings.count * [self.class defaultWarningHeight];
+    
+}
+
 - (NSInteger)numberOfWarningsForNavigationBar:(AUTNavigationBar *)navigationBar {
-    return self.warnings.count;
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+    return [self warningsCount];
 }
 
 - (CGFloat)heightForWarningAtIndex:(NSInteger)index {
+    NSLog(@"%@: %ld", NSStringFromSelector(_cmd), (long)index);
     return [self.class defaultWarningHeight];
 }
 
 - (void)configureWarningCell:(UITableViewCell *)cell atIndex:(NSInteger)index{
+    NSLog(@"%@", NSStringFromSelector(_cmd));
     NSString *title = self.warnings[index];
     cell.textLabel.text = title;
     

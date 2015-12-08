@@ -18,7 +18,7 @@ NSString *CellIdentifier = @"WarningCell";
 
 @property (null_resettable, nonatomic, strong) UITableView *warningsTableView;
 
-@property (nonatomic, assign) CGFloat lastWarningHeight;
+@property (nonatomic, assign) CGFloat warningHeight;
 
 @end
 
@@ -27,11 +27,12 @@ NSString *CellIdentifier = @"WarningCell";
 - (UITableView *)warningsTableView {
     if (_warningsTableView == nil) {
         _warningsTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-        _warningsTableView.hidden = YES;
         _warningsTableView.dataSource = self;
         _warningsTableView.delegate = self;
         _warningsTableView.scrollsToTop = NO;
         _warningsTableView.scrollEnabled = NO;
+        _warningsTableView.backgroundColor = [UIColor clearColor];
+        _warningsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [_warningsTableView registerClass:UITableViewCell.class forCellReuseIdentifier:CellIdentifier];
         [self addSubview:_warningsTableView];
     }
@@ -41,34 +42,14 @@ NSString *CellIdentifier = @"WarningCell";
 
 - (CGSize)sizeThatFits:(CGSize)size {
     CGSize originalSize = [super sizeThatFits:size];
+    
+    originalSize.height += self.warningHeight;
+    
+    [self setTransform:CGAffineTransformMakeTranslation(0, -(self.warningHeight))];
+    self.warningsTableView.transform = CGAffineTransformInvert(self.transform);
+    self.warningsTableView.frame = CGRectMake(0, originalSize.height, originalSize.width, self.warningHeight);
 
-    CGFloat warningHeight = 0;
-    
-    if (self.dataSource != nil) {
-        NSInteger warningCount = [self.dataSource numberOfWarningsForNavigationBar:self];
-        
-        for (int idx = 0; idx < warningCount; idx++) {
-            warningHeight += [self.dataSource heightForWarningAtIndex:idx];
-        }
-    }
-    
-    originalSize.height += warningHeight;
-    
-    [self setTransform:CGAffineTransformMakeTranslation(0, -(warningHeight))];
-    
-    if (warningHeight > 0) {
-        self.warningsTableView.hidden = NO;
-        self.warningsTableView.transform = CGAffineTransformInvert(self.transform);
-        if (self.warningsTableView.frame.size.width == 0) {
-            self.warningsTableView.frame = CGRectMake(0, originalSize.height, originalSize.width, 0);
-        }
-
-        NSLog(@"%@ content size: %@", NSStringFromSelector(_cmd), NSStringFromCGSize(self.warningsTableView.contentSize));
-    }
-    else {
-        self.warningsTableView.hidden = YES;
-    }
-
+    NSLog(@"%@ size: %@", NSStringFromSelector(_cmd), NSStringFromCGSize(originalSize));
     return originalSize;
 }
 
@@ -81,8 +62,14 @@ NSString *CellIdentifier = @"WarningCell";
     return [indexPaths copy];
 }
 
-- (void)updateWarningsByAddingAtIndexes:(NSIndexSet *)addedIndexes deletingAtIndexes:(NSIndexSet *)deletedIndexes animated:(BOOL)animated {
-    
+- (void)setWarningHeight:(CGFloat)height {
+    if (_warningHeight != height) {
+        _warningHeight = height;
+    }
+}
+
+- (void)updateWarningsByAddingAtIndexes:(NSIndexSet *)addedIndexes deletingAtIndexes:(NSIndexSet *)deletedIndexes {
+    NSLog(@"%@", NSStringFromSelector(_cmd));
     NSArray *addedIndexPaths = [self indexPathsFromIndexSet:addedIndexes];
     NSArray *deletedIndexPaths = [self indexPathsFromIndexSet:deletedIndexes];
     
@@ -101,21 +88,9 @@ NSString *CellIdentifier = @"WarningCell";
     CGRect frame = self.warningsTableView.frame;
     
     frame.size = CGSizeMake(CGRectGetWidth(self.frame), CGRectGetHeight(frame)+addedHeight-deletedHeight);
-    
-    [UIView beginAnimations:@"warning table updates" context:nil];
+
     self.warningsTableView.frame = frame;
-    [self.warningsTableView beginUpdates];
-    [self.warningsTableView deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
-    [self.warningsTableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
-    
-    [self.warningsTableView deleteRowsAtIndexPaths:deletedIndexPaths withRowAnimation:UITableViewRowAnimationLeft];
-    [self.warningsTableView insertRowsAtIndexPaths:addedIndexPaths withRowAnimation:UITableViewRowAnimationLeft];
-    
-    self.lastWarningHeight = CGRectGetHeight(frame);
-    
-    [self.warningsTableView endUpdates];
-    [UIView commitAnimations];
-    
+    [self.warningsTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
 }
 
 #pragma mark - UITableViewDataSource 

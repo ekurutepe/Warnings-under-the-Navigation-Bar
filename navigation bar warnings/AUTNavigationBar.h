@@ -16,11 +16,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, weak) id<AUTNavigationBarWarningsDataSource> dataSource;
 
-- (void)updateWarningsByAddingAtIndexes:(NSIndexSet *)addedIndexes deletingAtIndexes:(NSIndexSet *)deletedIndexes animated:(BOOL)animated;
+- (void)setWarningHeight:(CGFloat)height;
+
+- (void)updateWarningsByAddingAtIndexes:(NSIndexSet *)addedIndexes deletingAtIndexes:(NSIndexSet *)deletedIndexes;
 
 @end
 
 @protocol AUTNavigationBarWarningsDataSource <NSObject>
+
+- (CGFloat)heightForWarningsTablePreUpdate;
+
+- (CGFloat)heightForWarningsTablePostUpdate;
 
 - (NSInteger)numberOfWarningsForNavigationBar:(AUTNavigationBar *)navigationBar;
 
