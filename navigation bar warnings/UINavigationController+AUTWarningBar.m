@@ -139,8 +139,6 @@ NS_ASSUME_NONNULL_BEGIN
                     [curtain removeFromSuperview];
                 }];
             }];
-            
-            
         });
     }
 }

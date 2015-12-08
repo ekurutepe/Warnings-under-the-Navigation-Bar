@@ -24,10 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol AUTNavigationBarWarningsDataSource <NSObject>
 
-- (CGFloat)heightForWarningsTablePreUpdate;
-
-- (CGFloat)heightForWarningsTablePostUpdate;
-
 - (NSInteger)numberOfWarningsForNavigationBar:(AUTNavigationBar *)navigationBar;
 
 - (CGFloat)heightForWarningAtIndex:(NSInteger)index;
