@@ -82,7 +82,7 @@ NS_ASSUME_NONNULL_BEGIN
         NSMutableArray *addedWarnings = [NSMutableArray arrayWithArray:warnings];
         [addedWarnings removeObjectsInArray:previousWarnings];
         
-        NSIndexSet *addedIndexes = [warnings indexesOfObjectsPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSIndexSet *addedIndexes = [warnings indexesOfObjectsPassingTest:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             return [addedWarnings containsObject:obj];
         }];
         
@@ -97,7 +97,25 @@ NS_ASSUME_NONNULL_BEGIN
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self setWarningsCount:warnings.count];
-            CGFloat curtainOffset = ((NSInteger)addedIndexes.count - (NSInteger)removedIndexes.count)*30.0;
+
+            UIView *topView = self.topViewController.view;
+            NSIndexSet *scrollViewIndexes = [topView.subviews indexesOfObjectsPassingTest:^(UIView *obj, NSUInteger idx, BOOL *stop) {
+                *stop = [obj isKindOfClass:UIScrollView.class];
+                return *stop;
+            }];
+            
+            CGFloat offset = ((NSInteger)addedIndexes.count - (NSInteger)removedIndexes.count)*30.0;
+            UIScrollView *scrollView = nil;
+            
+            if ([topView isKindOfClass:UIScrollView.class] || scrollViewIndexes.count > 0) {
+                if ([topView isKindOfClass:UIScrollView.class]) {
+                    scrollView = (UIScrollView *)topView;
+                } else {
+                    scrollView = topView.subviews[scrollViewIndexes.firstIndex];
+                }
+
+            }
+            
             CGFloat navBarHeight = [self heightForWarningsTablePreUpdate];
             CGRect curtainFrame = CGRectMake(0, navBarHeight, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - navBarHeight);
             UIView *curtain = [self.topViewController.view resizableSnapshotViewFromRect:curtainFrame afterScreenUpdates:NO withCapInsets:UIEdgeInsetsZero];
@@ -106,7 +124,13 @@ NS_ASSUME_NONNULL_BEGIN
             [self.view insertSubview:curtain atIndex:1];
             [UIView animateWithDuration:0.2 animations:^{
                 [navBar updateWarningsByAddingAtIndexes:addedIndexes deletingAtIndexes:removedIndexes];
-                curtain.frame = CGRectOffset(curtain.frame, 0, curtainOffset);
+                if (scrollView != nil && scrollView.contentOffset.y > 0) {
+                    CGPoint contentOffset = scrollView.contentOffset;
+                    contentOffset.y += offset;
+                    scrollView.contentOffset = contentOffset;
+                } else {
+                    curtain.frame = CGRectOffset(curtain.frame, 0, offset);
+                }
             } completion:^(BOOL finished) {
                 [self setWarningHeight:[self heightForWarningsTablePostUpdate] forNavigationBar:navBar];
                 [UIView animateWithDuration:0.2 animations:^{
